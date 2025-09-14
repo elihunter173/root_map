@@ -32,7 +32,7 @@
         .text-overlay {
             position: absolute;
             color: white;
-            font-size: 22px;
+            font-size: var(--responsive-font-size);
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             transform: translate(-50%, -50%);
@@ -145,6 +145,16 @@
         let draggedElement = null;
         let startX, startY, startLeft, startTop;
 
+        // Update responsive font size based on image height
+        function updateFontSize() {
+            const image = document.querySelector('.main-image');
+            if (image && image.offsetHeight > 0) {
+                // Set font size to 3% of image height
+                const fontSize = Math.max(12, image.offsetHeight * 0.03);
+                document.documentElement.style.setProperty('--responsive-font-size', fontSize + 'px');
+            }
+        }
+
         // Create text overlays dynamically
         function createTextOverlays() {
             const container = document.querySelector('.image-container');
@@ -163,6 +173,9 @@
                 element.addEventListener('mousedown', startDrag);
                 element.addEventListener('dblclick', startEdit);
             });
+
+            // Update font size after creating overlays
+            updateFontSize();
         }
 
 
@@ -357,8 +370,9 @@
                 const left = parseFloat(overlay.style.left) / 100 * canvas.width;
                 const top = parseFloat(overlay.style.top) / 100 * canvas.height;
 
-                // Set text style to match CSS
-                ctx.font = 'bold 22px Arial';
+                // Set text style to match CSS with responsive font size
+                const responsiveFontSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--responsive-font-size'));
+                ctx.font = `bold ${responsiveFontSize}px Arial`;
                 ctx.fillStyle = 'white';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -399,6 +413,12 @@
 
         // Initialize the page
         loadPositions();
+
+        // Update font size on window resize
+        window.addEventListener('resize', updateFontSize);
+
+        // Update font size when image loads
+        document.querySelector('.main-image').addEventListener('load', updateFontSize);
 
         // Make function globally available
         window.getTextPositions = getTextPositions;
