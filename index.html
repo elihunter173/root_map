@@ -90,6 +90,26 @@
             background-color: #0056b3;
         }
 
+        .json-button {
+            position: fixed;
+            top: 20px;
+            right: 170px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .json-button:hover {
+            background-color: #1e7e34;
+        }
+
         /* Text positioning - modify left and top values to customize positions */
         .text-1 { left: 20%; top: 15%; }
         .text-2 { left: 50%; top: 10%; }
@@ -106,6 +126,7 @@
     </style>
 </head>
 <body>
+    <button class="json-button" onclick="downloadJSON()">Download JSON</button>
     <button class="download-button" onclick="downloadImage()">Download Image</button>
 
     <div class="image-container">
@@ -271,6 +292,18 @@
             input.addEventListener('keydown', handleKeydown);
 
             e.stopPropagation();
+        }
+
+        // Download positions as JSON
+        function downloadJSON() {
+            const positions = getTextPositions();
+            const jsonString = JSON.stringify(positions, null, 2);
+
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.download = 'positions.json';
+            link.href = URL.createObjectURL(blob);
+            link.click();
         }
 
         // Download image with overlays
