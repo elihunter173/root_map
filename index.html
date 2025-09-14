@@ -110,22 +110,36 @@
             background-color: #1e7e34;
         }
 
+        .upload-button {
+            position: fixed;
+            top: 20px;
+            right: 320px;
+            background-color: #ffc107;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .upload-button:hover {
+            background-color: #e0a800;
+        }
+
+        .file-input {
+            display: none;
+        }
+
         /* Text positioning - modify left and top values to customize positions */
-        .text-1 { left: 20%; top: 15%; }
-        .text-2 { left: 50%; top: 10%; }
-        .text-3 { left: 80%; top: 20%; }
-        .text-4 { left: 15%; top: 35%; }
-        .text-5 { left: 85%; top: 40%; }
-        .text-6 { left: 30%; top: 50%; }
-        .text-7 { left: 70%; top: 55%; }
-        .text-8 { left: 10%; top: 65%; }
-        .text-9 { left: 50%; top: 75%; }
-        .text-10 { left: 90%; top: 70%; }
-        .text-11 { left: 25%; top: 85%; }
-        .text-12 { left: 75%; top: 90%; }
     </style>
 </head>
 <body>
+    <input type="file" id="jsonFileInput" class="file-input" accept=".json" onchange="uploadJSON(event)">
+    <button class="upload-button" onclick="document.getElementById('jsonFileInput').click()">Upload JSON</button>
     <button class="json-button" onclick="downloadJSON()">Download JSON</button>
     <button class="download-button" onclick="downloadImage()">Download Image</button>
 
@@ -136,22 +150,7 @@
     </div>
 
     <script>
-        // Text overlay data
-        const textOverlays = [
-            { text: "Washington", left: 10.9474, top: 20.977 },
-            { text: "Ontario", left: 54.4211, top: 5.74713 },
-            { text: "Illinois", left: 42.9474, top: 22.4138 },
-            { text: "Colorado", left: 10.5789, top: 31.4368 },
-            { text: "New York", left: 87.4211, top: 15.6313 },
-            { text: "Texas", left: 31.2632, top: 48.2759 },
-            { text: "Missouri", left: 64.2105, top: 41.4368 },
-            { text: "California", left: 11.1579, top: 72.1264 },
-            { text: "Louisiana", left: 58.6316, top: 69.1379 },
-            { text: "Virginia", left: 89.8947, top: 61.954 },
-            { text: "Mexico", left: 37.4211, top: 80.7471 },
-            { text: "Florida", left: 82.1579, top: 79.0805 }
-        ];
-
+        let textOverlays = [];
         let draggedElement = null;
         let startX, startY, startLeft, startTop;
 
@@ -294,6 +293,47 @@
             e.stopPropagation();
         }
 
+        // Upload JSON file
+        function uploadJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const uploadedPositions = JSON.parse(e.target.result);
+
+                    // Validate the JSON structure
+                    if (!Array.isArray(uploadedPositions)) {
+                        throw new Error('JSON must be an array of position objects');
+                    }
+
+                    // Validate each position object
+                    for (const pos of uploadedPositions) {
+                        if (!pos.text || typeof pos.left !== 'number' || typeof pos.top !== 'number') {
+                            throw new Error('Each position must have text, left, and top properties');
+                        }
+                    }
+
+                    // Clear existing text overlays
+                    document.querySelectorAll('.text-overlay').forEach(el => el.remove());
+
+                    // Update textOverlays and recreate
+                    textOverlays = uploadedPositions;
+                    createTextOverlays();
+
+                    console.log('Successfully loaded JSON file with', uploadedPositions.length, 'text overlays');
+                } catch (error) {
+                    console.error('Error loading JSON file:', error);
+                    alert('Error loading JSON file: ' + error.message);
+                }
+            };
+
+            reader.readAsText(file);
+            // Reset the file input so the same file can be uploaded again
+            event.target.value = '';
+        }
+
         // Download positions as JSON
         function downloadJSON() {
             const positions = getTextPositions();
@@ -349,8 +389,25 @@
             link.click();
         }
 
+        // Load positions from JSON file
+        async function loadPositions() {
+            try {
+                const response = await fetch('positions.json');
+                if (response.ok) {
+                    textOverlays = await response.json();
+                    console.log('Loaded positions from positions.json');
+                    createTextOverlays();
+                } else {
+                    throw new Error('positions.json not found');
+                }
+            } catch (error) {
+                console.error('Could not load positions.json:', error);
+                console.log('No text overlays will be displayed. Please ensure positions.json exists.');
+            }
+        }
+
         // Initialize the page
-        createTextOverlays();
+        loadPositions();
 
         // Make function globally available
         window.getTextPositions = getTextPositions;

@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Washington",
+    "left": 10.9474,
+    "top": 20.977
+  },
+  {
+    "text": "Ontario",
+    "left": 54.4211,
+    "top": 5.74713
+  },
+  {
+    "text": "Illinois",
+    "left": 42.9474,
+    "top": 22.4138
+  },
+  {
+    "text": "Colorado",
+    "left": 10.5789,
+    "top": 31.4368
+  },
+  {
+    "text": "New York",
+    "left": 87.4211,
+    "top": 15.6313
+  },
+  {
+    "text": "Texas",
+    "left": 31.2632,
+    "top": 48.2759
+  },
+  {
+    "text": "Missouri",
+    "left": 64.2105,
+    "top": 41.4368
+  },
+  {
+    "text": "California",
+    "left": 11.1579,
+    "top": 72.1264
+  },
+  {
+    "text": "Louisiana",
+    "left": 58.6316,
+    "top": 69.1379
+  },
+  {
+    "text": "Virginia",
+    "left": 89.8947,
+    "top": 61.954
+  },
+  {
+    "text": "Mexico",
+    "left": 37.4211,
+    "top": 80.7471
+  },
+  {
+    "text": "Florida",
+    "left": 82.1579,
+    "top": 79.0805
+  }
+]
