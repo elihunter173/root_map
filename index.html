@@ -70,12 +70,17 @@
             min-width: 50px;
         }
 
-        .download-button {
+        .button-container {
             position: fixed;
             top: 20px;
-            right: 20px;
-            background-color: #007bff;
-            color: white;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .button {
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
@@ -83,51 +88,34 @@
             font-size: 14px;
             font-weight: bold;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
+            margin: 0;
         }
 
-        .download-button:hover {
-            background-color: #0056b3;
+        .upload-button {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .upload-button:hover {
+            background-color: #e0a800;
         }
 
         .json-button {
-            position: fixed;
-            top: 20px;
-            right: 170px;
             background-color: #28a745;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
         }
 
         .json-button:hover {
             background-color: #1e7e34;
         }
 
-        .upload-button {
-            position: fixed;
-            top: 20px;
-            right: 320px;
-            background-color: #ffc107;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
+        .download-button {
+            background-color: #007bff;
+            color: white;
         }
 
-        .upload-button:hover {
-            background-color: #e0a800;
+        .download-button:hover {
+            background-color: #0056b3;
         }
 
         .file-input {
@@ -139,9 +127,12 @@
 </head>
 <body>
     <input type="file" id="jsonFileInput" class="file-input" accept=".json" onchange="uploadJSON(event)">
-    <button class="upload-button" onclick="document.getElementById('jsonFileInput').click()">Upload JSON</button>
-    <button class="json-button" onclick="downloadJSON()">Download JSON</button>
-    <button class="download-button" onclick="downloadImage()">Download Image</button>
+
+    <div class="button-container">
+        <button class="button upload-button" onclick="document.getElementById('jsonFileInput').click()">Upload JSON</button>
+        <button class="button json-button" onclick="downloadJSON()">Download JSON</button>
+        <button class="button download-button" onclick="downloadImage()">Download Image</button>
+    </div>
 
     <div class="image-container">
         <img src="autumn.webp" alt="Autumn scene" class="main-image">
