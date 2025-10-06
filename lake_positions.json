@@ -1,0 +1,62 @@
+[
+  {
+    "text": "Paris",
+    "left": 13.4737,
+    "top": 12.4613
+  },
+  {
+    "text": "Berlin",
+    "left": 45.0526,
+    "top": 7.1275
+  },
+  {
+    "text": "Warsaw",
+    "left": 69.4737,
+    "top": 16.1995
+  },
+  {
+    "text": "Madrid",
+    "left": 12.9992,
+    "top": 54.1058
+  },
+  {
+    "text": "Kyiv",
+    "left": 91.4211,
+    "top": 26.2182
+  },
+  {
+    "text": "Rome",
+    "left": 31.0526,
+    "top": 27.217
+  },
+  {
+    "text": "Athens",
+    "left": 65.0518,
+    "top": 56.2806
+  },
+  {
+    "text": "Casablanca",
+    "left": 12.1053,
+    "top": 74.4264
+  },
+  {
+    "text": "Carthage",
+    "left": 34.7368,
+    "top": 60.8521
+  },
+  {
+    "text": "Istanbul",
+    "left": 82.2097,
+    "top": 60.6876
+  },
+  {
+    "text": "Tripoli",
+    "left": 49.2105,
+    "top": 81.2068
+  },
+  {
+    "text": "Alexandria",
+    "left": 84.4737,
+    "top": 91.3928
+  }
+]

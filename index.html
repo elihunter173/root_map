@@ -122,6 +122,23 @@
             display: none;
         }
 
+        .image-selector {
+            background-color: #6f42c1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            margin: 0;
+        }
+
+        .image-selector:hover {
+            background-color: #5a32a3;
+        }
+
         /* Text positioning - modify left and top values to customize positions */
     </style>
 </head>
@@ -132,6 +149,10 @@
         <button class="button upload-button" onclick="document.getElementById('jsonFileInput').click()">Upload JSON</button>
         <button class="button json-button" onclick="downloadJSON()">Download JSON</button>
         <button class="button download-button" onclick="downloadImage()">Download Image</button>
+        <select class="image-selector" onchange="changeImage(this.value)">
+            <option value="autumn.webp">Autumn</option>
+            <option value="lake.webp">Lake</option>
+        </select>
     </div>
 
     <div class="image-container">
@@ -389,36 +410,57 @@
 
             // Download the canvas as an image
             const link = document.createElement('a');
-            link.download = 'autumn-map.png';
+            link.download = 'map.png';
             link.href = canvas.toDataURL();
             link.click();
         }
 
         // Load positions from JSON file
-        async function loadPositions() {
+        async function loadPositions(imageName) {
+            // Clear existing text overlays
+            document.querySelectorAll('.text-overlay').forEach(el => el.remove());
+
+            const positionsFile = `${imageName}_positions.json`;
             try {
-                const response = await fetch('positions.json');
+                const response = await fetch(positionsFile);
                 if (response.ok) {
                     textOverlays = await response.json();
-                    console.log('Loaded positions from positions.json');
+                    console.log(`Loaded positions from ${positionsFile}`);
                     createTextOverlays();
                 } else {
-                    throw new Error('positions.json not found');
+                    throw new Error(`${positionsFile} not found`);
                 }
             } catch (error) {
-                console.error('Could not load positions.json:', error);
-                console.log('No text overlays will be displayed. Please ensure positions.json exists.');
+                console.error(`Could not load ${positionsFile}:`, error);
+                console.log(`No text overlays will be displayed. Please ensure ${positionsFile} exists.`);
+                textOverlays = [];
             }
         }
 
         // Initialize the page
-        loadPositions();
+        loadPositions('autumn');
 
         // Update font size on window resize
         window.addEventListener('resize', updateFontSize);
 
         // Update font size when image loads
         document.querySelector('.main-image').addEventListener('load', updateFontSize);
+
+        // Change image function
+        function changeImage(imagePath) {
+            const img = document.querySelector('.main-image');
+            img.src = imagePath;
+
+            // Update alt text based on selection
+            const imageName = imagePath.replace('.webp', '');
+            img.alt = imageName.charAt(0).toUpperCase() + imageName.slice(1) + ' scene';
+
+            // Load positions for the selected image
+            loadPositions(imageName);
+
+            // Update font size after image loads
+            img.onload = updateFontSize;
+        }
 
         // Make function globally available
         window.getTextPositions = getTextPositions;
