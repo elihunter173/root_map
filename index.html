@@ -439,7 +439,31 @@
         }
 
         // Initialize the page
-        loadPositions('autumn');
+        function initializePage() {
+            // Check for map query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const mapParam = urlParams.get('map');
+
+            let initialMap = 'autumn';
+            if (mapParam) {
+                const mapImg = mapParam + '.webp';
+                // Validate that the map exists in our options
+                const selector = document.querySelector('.image-selector');
+                const validMaps = Array.from(selector.options).map(opt => opt.value);
+
+                if (validMaps.includes(mapImg)) {
+                    initialMap = mapParam;
+                    // Update the selector to match
+                    selector.value = mapImg;
+                    // Update the image src
+                    document.querySelector('.main-image').src = mapImg;
+                }
+            }
+
+            loadPositions(initialMap);
+        }
+
+        initializePage();
 
         // Update font size on window resize
         window.addEventListener('resize', updateFontSize);
@@ -461,6 +485,11 @@
 
             // Update font size after image loads
             img.onload = updateFontSize;
+
+            // Update URL query params
+            const url = new URL(window.location);
+            url.searchParams.set('map', imageName);
+            window.history.pushState({}, '', url);
         }
 
         // Make function globally available
